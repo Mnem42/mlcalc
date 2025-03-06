@@ -13,6 +13,7 @@ pub enum Token{
     Keyword(Keyword),
     FloatLiteral(f64),
     Punctuator(char),
+    Unidentified(String),
     EOF
 }
 
@@ -36,7 +37,13 @@ impl Iterator for Lexer<'_>{
 
     fn next(&mut self) -> Option<Token>{
         self.position+=1;
+
+        if self.position>self.data.len() {
+            return None;
+        }
+
         let data=self.data[self.position-1];
+
         if data.parse::<f64>().is_ok() {
             Some(Token::FloatLiteral(data.parse::<f64>().expect("???")))
         }
@@ -44,7 +51,7 @@ impl Iterator for Lexer<'_>{
             match data{
                 "add" => Some(Token::Keyword(Keyword::Add)),
                 "sub" => Some(Token::Keyword(Keyword::Sub)),
-                _     => None
+                x     => Some(Token::Unidentified(data.to_string()))
             }
         }
     }
@@ -56,10 +63,20 @@ mod tests {
 
     #[test]
     fn lexer_test(){
-        let mut lexer = Lexer::new("add 1 2 x");
-        assert_eq!(lexer.next(),Some(Token::Keyword(Keyword::Add)));
+        let lexer = Lexer::new("add 1 2 x");
+        println!("{:?}",lexer);
+        assert!(lexer.eq([Token::Keyword(Keyword::Add),Token::FloatLiteral(1.0),
+            Token::FloatLiteral(2.0),Token::Unidentified("x".to_string())]));   
+
+        /*assert_eq!(lexer.next(),Some(Token::Keyword(Keyword::Add)));
         assert_eq!(lexer.next(),Some(Token::FloatLiteral(1.0)));
         assert_eq!(lexer.next(),Some(Token::FloatLiteral(2.0)));
-        assert_eq!(lexer.next(),None);
+        assert_eq!(lexer.next(),None);*/
+    }
+
+    #[test]
+    fn lexer_test_map(){
+        let mut lexer = Lexer::new("add 1 2 x \n sub 1 3 x");
+        lexer.for_each(|x| println!("{:?}",x));
     }
 }
