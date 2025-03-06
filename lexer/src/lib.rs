@@ -1,6 +1,6 @@
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-enum Keyword{
+pub enum Keyword{
     Add,
     Sub
 }
@@ -11,24 +11,43 @@ pub enum Token{
     Space,
     Comment,
     Keyword(Keyword),
-    FloatConstant(f64),
+    FloatLiteral(f64),
     Punctuator(char),
     EOF
 }
 
-pub fn parse(input: &str) -> Vec<Option<Token>>{
-    input.split_whitespace().map(|x| {
-            if x.parse::<f64>().is_ok() {
-                Some(Token::FloatConstant(x.parse::<f64>().expect("???")))
+#[derive(Debug)]
+struct Lexer<'a>{
+    data: Vec<&'a str>,
+    position: usize
+}
+
+impl Lexer<'_>{
+    pub fn new(input: &str) -> Lexer{
+        Lexer{
+            data:input.split_whitespace().collect(),
+            position:0
+        }
+    }
+}
+
+impl Iterator for Lexer<'_>{
+    type Item = Token;
+
+    fn next(&mut self) -> Option<Token>{
+        self.position+=1;
+        let data=self.data[self.position-1];
+        if data.parse::<f64>().is_ok() {
+            Some(Token::FloatLiteral(data.parse::<f64>().expect("???")))
+        }
+        else{
+            match data{
+                "add" => Some(Token::Keyword(Keyword::Add)),
+                "sub" => Some(Token::Keyword(Keyword::Sub)),
+                _     => None
             }
-            else{
-                match x{
-                    "add" => Some(Token::Keyword(Keyword::Add)),
-                    "sub" => Some(Token::Keyword(Keyword::Sub)),
-                    x     => None
-                }}
-            }
-        ).collect()
+        }
+    }
 }
 
 #[cfg(test)]
@@ -36,12 +55,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn lexer_test() {
-        //Move along, nothing to see here...
-
-        println!("{:?}",parse("add 1 2  \n sub 3 2 \n erap "));
-        assert_eq!(parse("add 1 2  \n sub 3 2 \n erap "), 
-        vec![Some(Token::Keyword(Keyword::Add)),Some(Token::FloatConstant(1.0)),Some(Token::FloatConstant(2.0))
-        ,Some(Token::Keyword(Keyword::Sub)),Some(Token::FloatConstant(3.0)),Some(Token::FloatConstant(2.0)),None]);
+    fn lexer_test(){
+        let mut lexer = Lexer::new("add 1 2 x");
+        assert_eq!(lexer.next(),Some(Token::Keyword(Keyword::Add)));
+        assert_eq!(lexer.next(),Some(Token::FloatLiteral(1.0)));
+        assert_eq!(lexer.next(),Some(Token::FloatLiteral(2.0)));
+        assert_eq!(lexer.next(),None);
     }
 }
