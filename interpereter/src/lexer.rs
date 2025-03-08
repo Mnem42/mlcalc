@@ -1,4 +1,5 @@
 use std::str::SplitWhitespace;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Keyword{
     Add,
@@ -8,14 +9,17 @@ pub enum Keyword{
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token{
     Identifier,
-    Space,
     Comment,
     Keyword(Keyword),
     FloatLiteral(f64),
     Punctuator(char),
-    Unidentified(String),
-    EOF
+    Unidentified(String)
 }
+
+/*struct Token {
+    pos: file::FilePos,
+    item: TokenItem
+}*/
 
 #[derive(Debug)]
 pub struct Lexer<'a>{
@@ -25,6 +29,13 @@ pub struct Lexer<'a>{
 
 impl Lexer<'_>{
     pub fn new(input: &str) -> Lexer{
+        Lexer{
+            data:input.split_whitespace(),
+            position:0
+        }
+    }
+
+    pub fn new(input: &InterpereterUnit) -> Lexer{
         Lexer{
             data:input.split_whitespace(),
             position:0

@@ -1,3 +1,4 @@
+mod fileio;
 mod lexer;
 use lexer::{Lexer,Token,Keyword};
 
