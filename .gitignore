@@ -1,2 +1,4 @@
 /target
-/lexer/target
+/interpereter/target
+Cargo.lock
+/interpereter/Cargo.lock
