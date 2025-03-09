@@ -10,14 +10,24 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  code-quality:
     runs-on: ["ubuntu-latest"]
+    steps:
+    - name: clippy
+      run: cargo clippy
+    - name: rustfmt
+      run: cargo rustfmt
 
+  test:
+    runs-on: ["ubuntu-latest"]
+    steps:
+    - name: Run tests
+      # skip fileio stuff, because it doesn't seem to work with github CI
+      run: cargo test --verbose --workspace -- --skip fileio_io
+
+  build:
+    runs-on: ["ubuntu-latest"]
     steps:
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
-    - name: Run tests
-      # skip fileio stuff, because it doesn't seem to work with github CI
-      run: cargo test --verbose --workspace -- --skip fileio_io
