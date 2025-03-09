@@ -13,12 +13,12 @@ pub struct InterpereterUnit{
 }
 
 impl InterpereterUnit{
-    //Helper function for initialising
+    ///Helper function for initialising
     pub fn new()->InterpereterUnit{
         InterpereterUnit{contents:String::new()}
     }
 
-    //Opens a file and sets the contents to the file contents
+    ///Opens a file and sets the contents to the file contents
     pub fn open_file(&mut self,pathname: &Path) -> Result<&InterpereterUnit,std::io::Error>{
         let mut tmp = File::open(&pathname)?;
 
@@ -26,20 +26,20 @@ impl InterpereterUnit{
         return Ok(self);
     }
 
-    //Tokenises and returns an iterator
+    ///Tokenises and returns an iterator
     pub fn str_tokenise(&self) -> SplitWhitespace{
         return self.contents.split_whitespace();
     }
 
-    //returns an copy of the contents (note:uses clone)
+    ///Returns an copy of the contents (note:uses clone)
     pub fn get_contents_copy(&self) -> String{
         self.contents.clone()
     }
-    //returns an mutable reference to the contents (note:risky)
+    ///Returns an mutable reference to the contents (note:risky)
     pub fn get_contents_mut(&mut self) -> &mut String{
         &mut self.contents
     }
-    //returns an immutable reference to the contents
+    ///Returns an immutable reference to the contents
     pub fn get_contents(&self) -> &String{
         &self.contents
     }

@@ -2,10 +2,17 @@ use std::str::SplitWhitespace;
 use crate::fileio;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+
+/// Enumeration for keywords.
 pub enum Keyword{
     Add,
-    Sub
+    Sub,
+    Mul,
+    Div,
+    Set
 }
+
+/// Enumeration for lexer tokens.
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token{
@@ -16,13 +23,13 @@ pub enum Token{
     Punctuator(char),
     Unidentified(String)
 }
-
 /*struct Token {
     pos: file::FilePos,
     item: TokenItem
 }*/
 
 #[derive(Debug)]
+/// A lexer struct. This is implemented as an `Iterator` of tokens.
 pub struct Lexer<'a>{
     data: SplitWhitespace<'a>,
     position: usize
@@ -44,6 +51,7 @@ impl Lexer<'_>{
     }
 }
 
+// Implements iterator so that it behaves like one
 impl Iterator for Lexer<'_>{
     type Item = Token;
 
@@ -54,18 +62,17 @@ impl Iterator for Lexer<'_>{
             Some(x) =>{
 				self.position+=x.chars().count();
 
-				let float_opt = match x.parse::<f64>() {
-					Ok(x)  => Some(Token::FloatLiteral(x)),
-					Err(_) => None
-				};
-
-				if float_opt != None {
-					return float_opt;
+				let float_opt = x.parse::<f64>();
+				if float_opt.is_ok() {
+					return Some(Token::FloatLiteral(float_opt.unwrap()));
 				}
 
 				match x{
 					"add" => Some(Token::Keyword(Keyword::Add)),
 					"sub" => Some(Token::Keyword(Keyword::Sub)),
+                    "mul" => Some(Token::Keyword(Keyword::Mul)),
+                    "div" => Some(Token::Keyword(Keyword::Div)),
+                    "set" => Some(Token::Keyword(Keyword::Set)),
 					_     => Some(Token::Unidentified(x.to_string()))
 				}
             }
