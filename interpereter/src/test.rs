@@ -1,8 +1,11 @@
+use std::path::Path;
+
 use super::*;
+use lexer::{Lexer,Token,Keyword};
 
 #[test]
 fn lexer_input_test_a(){
-    let lexer = Lexer::new("add 1 2 x");
+    let lexer = Lexer::new_str("add 1 2 x");
 
     assert!(lexer.eq([Token::Keyword(Keyword::Add),Token::FloatLiteral(1.0),
     Token::FloatLiteral(2.0),Token::Unidentified("x".to_string())]));   
@@ -10,7 +13,7 @@ fn lexer_input_test_a(){
 
 #[test]
 fn lexer_input_test_b(){
-    let lexer = Lexer::new("add 1 2 x \n sub 1 3 x \n foo");
+    let lexer = Lexer::new_str("add 1 2 x \n sub 1 3 x \n foo");
 
     assert!(lexer.eq([
         Token::Keyword(Keyword::Add),
@@ -23,4 +26,20 @@ fn lexer_input_test_b(){
         Token::Unidentified("x".to_string()),
         Token::Unidentified("foo".to_string())
     ]));
+}
+
+#[test]
+fn fileio_input_test_a(){
+    let mut unit = fileio::InterpereterUnit::new();
+
+    unit.open_file(Path::new("./test-files/a.txt")).expect("IO error");
+    assert_eq!(unit.get_contents(),"hello world");
+}
+
+#[test]
+fn fileio_input_test_b(){
+    let mut unit = fileio::InterpereterUnit::new();
+
+    unit.open_file(Path::new("./test-files/b.txt")).expect("IO error");
+    assert!(unit.get_contents()=="hello\n world " || unit.get_contents()=="hello\r\n world ");
 }

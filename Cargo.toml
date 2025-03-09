@@ -5,3 +5,8 @@ edition = "2024"
 
 [dependencies]
 slab_tree = "0.3.2"
+interpereter = { path = "./interpereter" }
+
+[workspace]
+resolver = "2"
+members = ["interpereter"]

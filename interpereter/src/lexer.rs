@@ -1,4 +1,5 @@
 use std::str::SplitWhitespace;
+use crate::fileio;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Keyword{
@@ -28,16 +29,16 @@ pub struct Lexer<'a>{
 }
 
 impl Lexer<'_>{
-    pub fn new(input: &str) -> Lexer{
+    pub fn new_str(input: &str) -> Lexer{
         Lexer{
             data:input.split_whitespace(),
             position:0
         }
     }
 
-    pub fn new(input: &InterpereterUnit) -> Lexer{
+    pub fn new(input: &fileio::InterpereterUnit) -> Lexer{
         Lexer{
-            data:input.split_whitespace(),
+            data:input.str_tokenise(),
             position:0
         }
     }
