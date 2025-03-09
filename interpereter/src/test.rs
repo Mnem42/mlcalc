@@ -37,9 +37,36 @@ fn fileio_input_test_a(){
 }
 
 #[test]
-fn fileio_input_test_b(){
+fn fileio_io_input_test_b(){
     let mut unit = fileio::InterpereterUnit::new();
 
     unit.open_file(Path::new("./test-files/b.txt")).expect("IO error");
     assert!(unit.get_contents()=="hello\n world " || unit.get_contents()=="hello\r\n world ");
+}
+
+#[test]
+fn fileio_interface_test_copycontents(){
+    let mut unit = fileio::InterpereterUnit::new();
+    let str = unit.get_contents_copy();
+
+    assert_eq!(str,"");
+}
+
+#[test]
+fn fileio_interface_test_mutcontents(){
+    let mut unit = fileio::InterpereterUnit::new();
+    let str = unit.get_contents_mut();
+
+    assert_eq!(str,"");
+
+    *str = "hello world".to_string();
+    assert_eq!(str,"hello world");
+}
+
+#[test]
+fn fileio_interface_test_getcontents(){
+    let mut unit = fileio::InterpereterUnit::new();
+    let str = unit.get_contents();
+
+    assert_eq!(str,"");
 }
