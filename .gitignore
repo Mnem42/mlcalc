@@ -1,7 +1,7 @@
-/target
-/interpereter/target
 Cargo.lock
 /interpereter/Cargo.lock
 
-!/target/doc*
-!/interpereter/target/doc*
+.lock
+**/target/debug
+**/target/.rust*
+**/CACHEDIR.tag
