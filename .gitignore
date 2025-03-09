@@ -1,6 +1,7 @@
-/target/doc*
-/interpereter/target/doc*
 /target
 /interpereter/target
 Cargo.lock
 /interpereter/Cargo.lock
+
+!/target/doc*
+!/interpereter/target/doc*
