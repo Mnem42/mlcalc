@@ -3,5 +3,6 @@ Cargo.lock
 
 .lock
 **/target/debug
+**/target/release
 **/target/.rust*
 **/CACHEDIR.tag
