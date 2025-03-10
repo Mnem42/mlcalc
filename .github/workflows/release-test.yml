@@ -26,7 +26,7 @@ jobs:
       steps:
       - name: Run tests
       # skip fileio stuff, because it doesn't seem to work with github CI
-        run: cargo test --verbose --workspace -- --skip fileio_io
+        run: cargo test --all --verbose --workspace -- --skip fileio_io
 
     build:
         runs-on: ["ubuntu-latest"]
