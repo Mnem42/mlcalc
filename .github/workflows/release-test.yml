@@ -18,12 +18,14 @@ jobs:
         runs-on: ["ubuntu-latest"]
         steps:
         - uses: actions/checkout@v4
+        - uses: actions/checkout@v4
         - name: rustdoc
           run: cargo fmt --all
     
     test:
       runs-on: ["ubuntu-latest"]
       steps:
+      - uses: actions/checkout@v4
       - name: Run tests
       # skip fileio stuff, because it doesn't seem to work with github CI
         run: cargo test --all --verbose --workspace -- --skip fileio_io
