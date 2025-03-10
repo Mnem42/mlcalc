@@ -5,9 +5,32 @@ on:
     types: [published]
 
 jobs:
+    code-quality:
+        runs-on: ["ubuntu-latest"]
+        steps:
+        - uses: actions/checkout@v4
+        - name: clippy
+          run: cargo clippy --all-targets --all-features
+        - name: fmt
+          run: cargo fmt --all
+
+    docs:
+        runs-on: ["ubuntu-latest"]
+        steps:
+        - uses: actions/checkout@v4
+        - name: rustdoc
+          run: cargo fmt --all
+    
+    test:
+      runs-on: ["ubuntu-latest"]
+      steps:
+      - name: Run tests
+      # skip fileio stuff, because it doesn't seem to work with github CI
+        run: cargo test --verbose --workspace -- --skip fileio_io
+
     build:
         runs-on: ["ubuntu-latest"]
         steps:
         - uses: actions/checkout@v4
         - name: Build
-          run: cargo build --verbose --release
+          run: cargo build --verbose --workspace --release

@@ -16,8 +16,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: clippy
       run: cargo clippy --all-targets --all-features
-    - name: rustfmt
-      run: cargo rustfmt
 
   test:
     runs-on: ["ubuntu-latest"]
