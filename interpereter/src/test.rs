@@ -1,5 +1,7 @@
 use std::{f64::consts::PI, path::Path};
 
+use crate::tokeniser::StrTokeniser;
+
 use super::*;
 use lexer::{Keyword, Lexer, Token};
 
@@ -75,4 +77,11 @@ fn fileio_interface_test_getcontents() {
     let str = unit.contents;
 
     assert_eq!(str, "");
+}
+
+#[test]
+fn itertok_test1() {
+    let tmp = StrTokeniser::new("add 1 2".to_string());
+    println!("{:?}",str);
+    panic!("Check.");
 }
