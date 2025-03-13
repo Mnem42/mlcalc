@@ -2,7 +2,4 @@ Cargo.lock
 /interpereter/Cargo.lock
 
 .lock
-**/target/debug
-**/target/release
-**/target/.rust*
-**/CACHEDIR.tag
+**/target

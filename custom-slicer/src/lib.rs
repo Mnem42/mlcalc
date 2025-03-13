@@ -1,17 +1,15 @@
-pub enum Item{
+pub enum Item {
     Line(String),
     Newline,
-    EOF
+    EOF,
 }
 
-struct StringSlice{
-    
-}
+struct StringSlice {}
 
-impl Iterator for StringSlice{
+impl Iterator for StringSlice {
     type Item = Item;
 
-    fn next(&mut self) -> Option<Item>{
+    fn next(&mut self) -> Option<Item> {
         todo!("This isn't actually implemented")
     }
 }
@@ -21,7 +19,5 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        
-    }
+    fn it_works() {}
 }
