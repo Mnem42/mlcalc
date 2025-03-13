@@ -56,27 +56,21 @@ impl Iterator for Lexer<'_> {
     type Item = Token;
 
     fn next(&mut self) -> Option<Token> {
-        let slice = self.data.next();
+        let x = self.data.next()?;
 
-        match slice {
-            Some(x) => {
-                self.position += x.chars().count();
+        self.position += x.chars().count();
 
-                let float_opt = x.parse::<f64>();
-                if let Ok(float_opt) = float_opt {
-                    return Some(Token::FloatLiteral(float_opt));
-                }
+        if let Ok(float_opt) = x.parse() {
+            return Some(Token::FloatLiteral(float_opt));
+        }
 
-                match x {
-                    "add" => Some(Token::Keyword(Keyword::Add)),
-                    "sub" => Some(Token::Keyword(Keyword::Sub)),
-                    "mul" => Some(Token::Keyword(Keyword::Mul)),
-                    "div" => Some(Token::Keyword(Keyword::Div)),
-                    "set" => Some(Token::Keyword(Keyword::Set)),
-                    _ => Some(Token::Unidentified(x.to_string())),
-                }
-            }
-            None => None,
+        match x {
+            "add" => Some(Token::Keyword(Keyword::Add)),
+            "sub" => Some(Token::Keyword(Keyword::Sub)),
+            "mul" => Some(Token::Keyword(Keyword::Mul)),
+            "div" => Some(Token::Keyword(Keyword::Div)),
+            "set" => Some(Token::Keyword(Keyword::Set)),
+            _ => Some(Token::Unidentified(x.to_string())),
         }
     }
 }
