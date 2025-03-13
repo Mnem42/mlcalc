@@ -1,5 +1,7 @@
 use std::path::Path;
 
+use crate::tokeniser::StrTokeniser;
+
 use super::*;
 use lexer::{Lexer,Token,Keyword};
 
@@ -65,8 +67,15 @@ fn fileio_interface_test_mutcontents(){
 
 #[test]
 fn fileio_interface_test_getcontents(){
-    let mut unit = fileio::InterpereterUnit::new();
+    let unit = fileio::InterpereterUnit::new();
     let str = unit.get_contents();
 
     assert_eq!(str,"");
+}
+
+#[test]
+fn itertok_test1(){
+    let tmp = StrTokeniser::new("add 1 2".to_string());
+    println!("{:?}",str);
+    panic!("Check.");
 }

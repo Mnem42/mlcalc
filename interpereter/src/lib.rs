@@ -1,4 +1,5 @@
 mod fileio;
+mod tokeniser;
 mod lexer;
 mod resolver;
 
