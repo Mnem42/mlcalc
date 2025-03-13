@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::{f64::consts::PI, path::Path};
 
 use super::*;
 use lexer::{Keyword, Lexer, Token};
@@ -26,7 +26,7 @@ fn lexer_input_test_b() {
         Token::Unidentified("x".to_string()),
         Token::Keyword(Keyword::Sub),
         Token::FloatLiteral(1.0),
-        Token::FloatLiteral(3.14),
+        Token::FloatLiteral(PI),
         Token::Unidentified("x".to_string()),
         Token::Unidentified("foo".to_string())
     ]));
@@ -38,7 +38,7 @@ fn fileio_input_test_a() {
 
     unit.open_file(Path::new("./test-files/a.txt"))
         .expect("IO error");
-    assert_eq!(unit.get_contents(), "hello world");
+    assert_eq!(unit.contents, "hello world");
 }
 
 #[test]
@@ -47,13 +47,13 @@ fn fileio_io_input_test_b() {
 
     unit.open_file(Path::new("./test-files/b.txt"))
         .expect("IO error");
-    assert!(unit.get_contents() == "hello\n world " || unit.get_contents() == "hello\r\n world ");
+    assert!(unit.contents == "hello\n world " || unit.contents == "hello\r\n world ");
 }
 
 #[test]
 fn fileio_interface_test_copycontents() {
-    let mut unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents_copy();
+    let unit = fileio::InterpereterUnit::new();
+    let str = unit.contents;
 
     assert_eq!(str, "");
 }
@@ -61,18 +61,18 @@ fn fileio_interface_test_copycontents() {
 #[test]
 fn fileio_interface_test_mutcontents() {
     let mut unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents_mut();
+    let content = &mut unit.contents;
 
-    assert_eq!(str, "");
+    assert_eq!(content, "");
 
-    *str = "hello world".to_string();
-    assert_eq!(str, "hello world");
+    *content = "hello world".to_string();
+    assert_eq!(content, "hello world");
 }
 
 #[test]
 fn fileio_interface_test_getcontents() {
-    let mut unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents();
+    let unit = fileio::InterpereterUnit::new();
+    let str = unit.contents;
 
     assert_eq!(str, "");
 }
