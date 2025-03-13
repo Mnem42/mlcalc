@@ -1,20 +1,24 @@
-use std::path::Path;
+use std::{f64::consts::PI, path::Path};
 
 use crate::tokeniser::StrTokeniser;
 
 use super::*;
-use lexer::{Lexer,Token,Keyword};
+use lexer::{Keyword, Lexer, Token};
 
 #[test]
-fn lexer_input_test_a(){
+fn lexer_input_test_a() {
     let lexer = Lexer::new_str("add 1 2 x");
 
-    assert!(lexer.eq([Token::Keyword(Keyword::Add),Token::FloatLiteral(1.0),
-    Token::FloatLiteral(2.0),Token::Unidentified("x".to_string())]));   
+    assert!(lexer.eq([
+        Token::Keyword(Keyword::Add),
+        Token::FloatLiteral(1.0),
+        Token::FloatLiteral(2.0),
+        Token::Unidentified("x".to_string())
+    ]));
 }
 
 #[test]
-fn lexer_input_test_b(){
+fn lexer_input_test_b() {
     let lexer = Lexer::new_str("add 1 2 x \n sub 1.0 3.14 x \n foo");
 
     assert!(lexer.eq([
@@ -24,57 +28,59 @@ fn lexer_input_test_b(){
         Token::Unidentified("x".to_string()),
         Token::Keyword(Keyword::Sub),
         Token::FloatLiteral(1.0),
-        Token::FloatLiteral(3.14),
+        Token::FloatLiteral(PI),
         Token::Unidentified("x".to_string()),
         Token::Unidentified("foo".to_string())
     ]));
 }
 
 #[test]
-fn fileio_input_test_a(){
+fn fileio_input_test_a() {
     let mut unit = fileio::InterpereterUnit::new();
 
-    unit.open_file(Path::new("./test-files/a.txt")).expect("IO error");
-    assert_eq!(unit.get_contents(),"hello world");
+    unit.open_file(Path::new("./test-files/a.txt"))
+        .expect("IO error");
+    assert_eq!(unit.contents, "hello world");
 }
 
 #[test]
-fn fileio_io_input_test_b(){
+fn fileio_io_input_test_b() {
     let mut unit = fileio::InterpereterUnit::new();
 
-    unit.open_file(Path::new("./test-files/b.txt")).expect("IO error");
-    assert!(unit.get_contents()=="hello\n world " || unit.get_contents()=="hello\r\n world ");
+    unit.open_file(Path::new("./test-files/b.txt"))
+        .expect("IO error");
+    assert!(unit.contents == "hello\n world " || unit.contents == "hello\r\n world ");
 }
 
 #[test]
-fn fileio_interface_test_copycontents(){
-    let mut unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents_copy();
-
-    assert_eq!(str,"");
-}
-
-#[test]
-fn fileio_interface_test_mutcontents(){
-    let mut unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents_mut();
-
-    assert_eq!(str,"");
-
-    *str = "hello world".to_string();
-    assert_eq!(str,"hello world");
-}
-
-#[test]
-fn fileio_interface_test_getcontents(){
+fn fileio_interface_test_copycontents() {
     let unit = fileio::InterpereterUnit::new();
-    let str = unit.get_contents();
+    let str = unit.contents;
 
-    assert_eq!(str,"");
+    assert_eq!(str, "");
 }
 
 #[test]
-fn itertok_test1(){
+fn fileio_interface_test_mutcontents() {
+    let mut unit = fileio::InterpereterUnit::new();
+    let content = &mut unit.contents;
+
+    assert_eq!(content, "");
+
+    *content = "hello world".to_string();
+    assert_eq!(content, "hello world");
+}
+
+#[test]
+fn fileio_interface_test_getcontents() {
+    let unit = fileio::InterpereterUnit::new();
+    let str = unit.contents;
+
+    assert_eq!(str, "");
+}
+
+#[test]
+fn itertok_test1() {
     let tmp = StrTokeniser::new("add 1 2".to_string());
     println!("{:?}",str);
     panic!("Check.");
