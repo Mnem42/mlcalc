@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-interpereter = { path = "./interpereter" }
+mlcalc-interpereter = { path = "./mlcalc-interpereter" }
 
 [workspace]
 resolver = "2"
-members = ["interpereter"]
+members = ["mlcalc-interpereter"]

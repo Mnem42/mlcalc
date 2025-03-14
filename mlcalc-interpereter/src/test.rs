@@ -1,6 +1,6 @@
 use std::{f64::consts::PI, path::Path};
 
-use crate::tokeniser::StrTokeniser;
+use crate::stringtokeniser::StrTokeniser;
 
 use super::*;
 use lexer::{Keyword, Lexer, Token};
@@ -81,7 +81,8 @@ fn fileio_interface_test_getcontents() {
 
 #[test]
 fn itertok_test1() {
-    let tmp = StrTokeniser::new("add 1 2".to_string());
-    println!("{:?}",str);
+    let str = "add 1 2\n daa 2 1".to_string();
+    let tmp = StrTokeniser::new(&str);
+    println!("{:?}",tmp.collect());
     panic!("Check.");
 }

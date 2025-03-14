@@ -3,12 +3,12 @@
 version = 4
 
 [[package]]
-name = "interpereter"
-version = "0.1.0"
-
-[[package]]
 name = "mlcalc"
 version = "0.1.0"
 dependencies = [
- "interpereter",
+ "mlcalc-interpereter",
 ]
+
+[[package]]
+name = "mlcalc-interpereter"
+version = "0.1.0"
