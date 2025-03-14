@@ -18,7 +18,7 @@ struct Resolver {
 }
 
 impl Resolver {
-    pub fn new<'a>(input_vec: Vec<ResolvedToken>) -> Resolver {
+    pub fn new(input_vec: Vec<ResolvedToken>) -> Resolver {
         Resolver {
             contents: input_vec,
             position: 0,

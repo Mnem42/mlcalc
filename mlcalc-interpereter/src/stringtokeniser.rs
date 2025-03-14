@@ -24,7 +24,7 @@ impl<'a> StrTokeniser<'a> {
         }
     }
 
-    pub fn collect(mut self) -> Vec<StrToken> {
+    pub fn collect(self) -> Vec<StrToken> {
         let mut out: Vec<StrToken> = vec![];
         let mut tmpstr = "".to_string();
         let size = self.contained.size_hint();
@@ -43,10 +43,7 @@ impl<'a> StrTokeniser<'a> {
                 tmpstr.clear();
             }
             x => {
-                let size = match size.1 {
-                    Some(x) => x,
-                    None => 0,
-                };
+                let size = size.1.unwrap_or(0);
                 if i > size - 4 {
                     out.push(StrToken::Generic(tmpstr.clone()));
                 }
@@ -63,20 +60,3 @@ impl<'a> StrTokeniser<'a> {
         out
     }
 }
-
-/*
-impl Iterator for StrTokeniser{
-    type Item = StrToken;
-
-    fn next(&mut self)  -> Option<StrToken> {
-        let mut iter= self.contained.iter();
-        println!("aa");
-        match iter.next(){
-            Some(CharToken::EOL) => Some(StrToken::EOL),
-            Some(CharToken::Generic(_)) => Some(StrToken::Generic(strcollect(iter.collect()))),
-            None => Some(StrToken::EOF),
-            _ => todo!("Something isn't implemented")
-        }
-    }
-}
-    */
