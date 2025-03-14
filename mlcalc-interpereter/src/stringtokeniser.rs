@@ -1,58 +1,55 @@
-use std::string::{String};
 use std::str::Chars;
+use std::string::String;
 
 #[derive(Debug, Clone)]
-pub enum StrToken{
+pub enum StrToken {
     Generic(String),
     Space,
     EOL,
-    EOF
+    EOF,
 }
 
-pub struct StrTokeniser<'a>{
+pub struct StrTokeniser<'a> {
     contained: Chars<'a>,
-    position: usize
+    position: usize,
 }
 
-
-
-impl <'a>StrTokeniser<'a>{
-    pub fn new(input: &'a String) -> StrTokeniser<'a>{
+impl<'a> StrTokeniser<'a> {
+    pub fn new(input: &'a String) -> StrTokeniser<'a> {
         let tmp = input.chars();
-        StrTokeniser{
-            contained: tmp, position:0
+        StrTokeniser {
+            contained: tmp,
+            position: 0,
         }
     }
 
-    pub fn collect(mut self) -> Vec<StrToken>{
+    pub fn collect(mut self) -> Vec<StrToken> {
         let mut out: Vec<StrToken> = vec![];
         let mut tmpstr = "".to_string();
         let size = self.contained.size_hint();
 
-        self.contained.enumerate().for_each(
-            |(i, x)| match x {
-                ' ' => {
-                    out.push(StrToken::Generic(tmpstr.clone()));
-                    out.push(StrToken::Space); 
-                    tmpstr.clear();
-                },
-                '\n' => {
-                    out.push(StrToken::Generic(tmpstr.clone()));
-                    out.push(StrToken::EOL); 
-                    tmpstr.clear();
-                },
-                x => {
-                    let size = match size.1 {
-                        Some(x) => x,
-                        None => 0
-                    };
-                    if i > size-4{
-                        out.push(StrToken::Generic(tmpstr.clone()));
-                    }
-                    tmpstr.push(x);
-                }
+        self.contained.enumerate().for_each(|(i, x)| match x {
+            ' ' => {
+                out.push(StrToken::Generic(tmpstr.clone()));
+                out.push(StrToken::Space);
+                tmpstr.clear();
             }
-        );
+            '\n' => {
+                out.push(StrToken::Generic(tmpstr.clone()));
+                out.push(StrToken::EOL);
+                tmpstr.clear();
+            }
+            x => {
+                let size = match size.1 {
+                    Some(x) => x,
+                    None => 0,
+                };
+                if i > size - 4 {
+                    out.push(StrToken::Generic(tmpstr.clone()));
+                }
+                tmpstr.push(x);
+            }
+        });
 
         out.push(StrToken::Generic(tmpstr.clone()));
         out.push(StrToken::EOF);

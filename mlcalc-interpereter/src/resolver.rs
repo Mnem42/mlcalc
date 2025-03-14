@@ -1,6 +1,6 @@
 use std::path::Iter;
 
-use crate::lexer::{Token, Lexer};
+use crate::lexer::{Lexer, Token};
 
 #[derive(Debug, Clone, PartialEq)]
 
@@ -12,26 +12,28 @@ pub enum ResolvedToken {
     Var(f64),
 }
 
-struct Resolver{
+struct Resolver {
     contents: Vec<ResolvedToken>,
-    position: usize
+    position: usize,
 }
 
-impl Resolver{
-    pub fn new<'a>(input_vec: Vec<ResolvedToken>) -> Resolver{
-        Resolver{
-            contents:input_vec,
-            position:0
+impl Resolver {
+    pub fn new<'a>(input_vec: Vec<ResolvedToken>) -> Resolver {
+        Resolver {
+            contents: input_vec,
+            position: 0,
         }
     }
 }
 
-impl Iterator for Resolver{
+impl Iterator for Resolver {
     type Item = ResolvedToken;
 
-    fn next(&mut self) -> Option<ResolvedToken>{
+    fn next(&mut self) -> Option<ResolvedToken> {
         if self.contents.len() < self.position {
             Some(self.contents[self.position].clone())
-        } else { None }
+        } else {
+            None
+        }
     }
 }

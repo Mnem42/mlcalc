@@ -83,6 +83,6 @@ fn fileio_interface_test_getcontents() {
 fn itertok_test1() {
     let str = "add 1 2\n daa 2 1".to_string();
     let tmp = StrTokeniser::new(&str);
-    println!("{:?}",tmp.collect());
+    println!("{:?}", tmp.collect());
     panic!("Check.");
 }
