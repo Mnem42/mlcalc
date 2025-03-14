@@ -21,6 +21,7 @@ fn lexer_input_test_a() {
 fn lexer_input_test_b() {
     let lexer = Lexer::new_str("add 1 2 x \n sub 1.0 3.14 x \n foo");
 
+    println!("{:?}", lexer.clone().collect::<Vec<_>>());
     assert!(lexer.eq([
         Token::Keyword(Keyword::Add),
         Token::FloatLiteral(1.0),
@@ -28,7 +29,7 @@ fn lexer_input_test_b() {
         Token::Unidentified("x".to_string()),
         Token::Keyword(Keyword::Sub),
         Token::FloatLiteral(1.0),
-        Token::FloatLiteral(PI),
+        Token::FloatLiteral(3.14),
         Token::Unidentified("x".to_string()),
         Token::Unidentified("foo".to_string())
     ]));
@@ -81,8 +82,24 @@ fn fileio_interface_test_getcontents() {
 
 #[test]
 fn itertok_test1() {
-    let str = "add 1 2\n daa 2 1".to_string();
+    use stringtokeniser::StrToken;
+
+    let str = "add 1 2\ndaa 2 1".to_string();
     let tmp = StrTokeniser::new(&str);
-    println!("{:?}", tmp.collect());
-    panic!("Check.");
+    println!("{:?}", tmp.clone().collect());
+    assert_eq!(tmp.collect(),vec![
+        StrToken::Generic("add".to_string()),
+        StrToken::Space,
+        StrToken::Generic("1".to_string()),
+        StrToken::Space,
+        StrToken::Generic("2".to_string()),
+        StrToken::EOL,
+        StrToken::Generic("daa".to_string()),
+        StrToken::Space,
+        StrToken::Generic("2".to_string()),
+        StrToken::Space,
+        StrToken::Generic("1".to_string()),
+        StrToken::EOF
+
+    ])
 }

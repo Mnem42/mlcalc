@@ -28,7 +28,7 @@ pub enum Token {
     item: TokenItem
 }*/
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 /// A lexer struct. This is implemented as an `Iterator` of tokens.
 pub struct Lexer<'a> {
     data: SplitWhitespace<'a>,

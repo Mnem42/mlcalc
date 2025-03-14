@@ -1,7 +1,7 @@
 use std::str::Chars;
 use std::string::String;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum StrToken {
     Generic(String),
     Space,
@@ -9,6 +9,7 @@ pub enum StrToken {
     EOF,
 }
 
+#[derive(Clone)]
 pub struct StrTokeniser<'a> {
     contained: Chars<'a>,
     position: usize,
@@ -32,11 +33,13 @@ impl<'a> StrTokeniser<'a> {
             ' ' => {
                 out.push(StrToken::Generic(tmpstr.clone()));
                 out.push(StrToken::Space);
+                
                 tmpstr.clear();
             }
             '\n' => {
                 out.push(StrToken::Generic(tmpstr.clone()));
                 out.push(StrToken::EOL);
+
                 tmpstr.clear();
             }
             x => {
@@ -53,6 +56,9 @@ impl<'a> StrTokeniser<'a> {
 
         out.push(StrToken::Generic(tmpstr.clone()));
         out.push(StrToken::EOF);
+
+        // Remove empty tokens. There's probably a way to avoid them, but idk what it is
+        out.retain(|x| *x != StrToken::Generic("".to_string()));
 
         out
     }
