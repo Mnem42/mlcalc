@@ -22,35 +22,39 @@ pub enum Keyword {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Identifier,
-    Comment,
+    Comment(String),
     Keyword(Keyword),
     FloatLiteral(f64),
     Punctuator(char),
     Unidentified(String),
     Space,
     EOL,
-    EOF
+    EOF,
+    Empty
 }
 
 #[derive(Debug, Clone)]
 /// A lexer struct. This is implemented as an `Iterator` of tokens.
 pub struct Lexer<'a> {
     contained: std::slice::Iter<'a, StrToken>,
-    position: usize,
+    comment_str: String,
+    in_comment: bool
 }
 
 impl <'a>Lexer<'a> {
     pub fn new_tokenarr(input: &[StrToken]) -> Lexer {
         Lexer {
             contained: input.iter(),
-            position: 0,
+            in_comment: false,
+            comment_str: String::new()
         }
     }
 
     pub fn new(input: std::slice::Iter<'a, StrToken>) -> Lexer<'a> {
         Lexer {
             contained: input,
-            position: 0,
+            in_comment: false,
+            comment_str: String::new()
         }
     }
 }
@@ -62,7 +66,15 @@ impl Iterator for Lexer<'_> {
     fn next(&mut self) -> Option<Token> {
         match self.contained.next()? {
             StrToken::Generic(x) =>{
-                if let Ok(float_opt) = x.parse::<f64>() {
+                if *x == "".to_string(){
+                    return Some(Token::Empty)
+                }
+
+                if self.in_comment {
+                    self.comment_str.push_str(x);
+                    Some(Token::Empty)
+                }
+                else if let Ok(float_opt) = x.parse::<f64>() {
                     Some(Token::FloatLiteral(float_opt))
                 }
                 else{
@@ -72,13 +84,45 @@ impl Iterator for Lexer<'_> {
                         "mul" => Some(Token::Keyword(Keyword::Mul)),
                         "div" => Some(Token::Keyword(Keyword::Div)),
                         "set" => Some(Token::Keyword(Keyword::Set)),
+                        "#"   => {self.in_comment=true;Some(Token::Empty)},
                         _ => Some(Token::Unidentified(x.to_string())),
                     }
                 }
             }
-            StrToken::Space => Some(Token::Space),
-            StrToken::EOL   => Some(Token::EOL),
-            StrToken::EOF   => Some(Token::EOF)
+            StrToken::Space => {
+                if self.in_comment {
+                    self.comment_str.push(' ');
+                    Some(Token::Empty)
+                }
+                else{
+                    Some(Token::Space)
+                }
+            },
+            StrToken::EOL => {
+                if !self.comment_str.is_empty(){
+                    let tmp = Some(Token::Comment(self.comment_str.clone()));
+                    self.comment_str.clear();
+                    self.in_comment=false;
+
+                    tmp
+                }
+                else{
+                    Some(Token::EOL)
+                }
+            },
+            StrToken::EOF => Some(Token::EOF)
         }
     }
+}
+
+/// Removes `Token::Empty` and `Token::Space`
+pub fn clean_tokenarr(x: &[Token]) -> Vec<Token> {
+    let mut tmp = vec![];
+    x.iter().clone().for_each(|x| match x{
+        Token::Empty => {}
+        Token::Space => {}
+        x => tmp.push(x.clone())
+    });
+
+    tmp
 }
