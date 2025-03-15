@@ -1,5 +1,10 @@
 use crate::fileio;
+use crate::stringtokeniser;
+use crate::stringtokeniser::StrToken;
+use crate::stringtokeniser::StrTokeniser;
+use std::collections::binary_heap::Iter;
 use std::str::SplitWhitespace;
+use std::slice;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 
@@ -22,30 +27,29 @@ pub enum Token {
     FloatLiteral(f64),
     Punctuator(char),
     Unidentified(String),
+    Space,
+    EOL,
+    EOF
 }
-/*struct Token {
-    pos: file::FilePos,
-    item: TokenItem
-}*/
 
 #[derive(Debug, Clone)]
 /// A lexer struct. This is implemented as an `Iterator` of tokens.
 pub struct Lexer<'a> {
-    data: SplitWhitespace<'a>,
+    contained: std::slice::Iter<'a, StrToken>,
     position: usize,
 }
 
-impl Lexer<'_> {
-    pub fn new_str(input: &str) -> Lexer {
+impl <'a>Lexer<'a> {
+    pub fn new_tokenarr(input: &[StrToken]) -> Lexer {
         Lexer {
-            data: input.split_whitespace(),
+            contained: input.iter(),
             position: 0,
         }
     }
 
-    pub fn new(input: &fileio::InterpereterUnit) -> Lexer {
+    pub fn new(input: std::slice::Iter<'a, StrToken>) -> Lexer<'a> {
         Lexer {
-            data: input.str_tokenise(),
+            contained: input,
             position: 0,
         }
     }
@@ -56,21 +60,25 @@ impl Iterator for Lexer<'_> {
     type Item = Token;
 
     fn next(&mut self) -> Option<Token> {
-        let x = self.data.next()?;
-
-        self.position += x.chars().count();
-
-        if let Ok(float_opt) = x.parse() {
-            return Some(Token::FloatLiteral(float_opt));
-        }
-
-        match x {
-            "add" => Some(Token::Keyword(Keyword::Add)),
-            "sub" => Some(Token::Keyword(Keyword::Sub)),
-            "mul" => Some(Token::Keyword(Keyword::Mul)),
-            "div" => Some(Token::Keyword(Keyword::Div)),
-            "set" => Some(Token::Keyword(Keyword::Set)),
-            _ => Some(Token::Unidentified(x.to_string())),
+        match self.contained.next()? {
+            StrToken::Generic(x) =>{
+                if let Ok(float_opt) = x.parse::<f64>() {
+                    Some(Token::FloatLiteral(float_opt))
+                }
+                else{
+                    match x.as_str() {
+                        "add" => Some(Token::Keyword(Keyword::Add)),
+                        "sub" => Some(Token::Keyword(Keyword::Sub)),
+                        "mul" => Some(Token::Keyword(Keyword::Mul)),
+                        "div" => Some(Token::Keyword(Keyword::Div)),
+                        "set" => Some(Token::Keyword(Keyword::Set)),
+                        _ => Some(Token::Unidentified(x.to_string())),
+                    }
+                }
+            }
+            StrToken::Space => Some(Token::Space),
+            StrToken::EOL   => Some(Token::EOL),
+            StrToken::EOF   => Some(Token::EOF)
         }
     }
 }

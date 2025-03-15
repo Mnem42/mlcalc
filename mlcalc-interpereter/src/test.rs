@@ -1,13 +1,19 @@
 use std::{f64::consts::PI, path::Path};
 
-use crate::stringtokeniser::StrTokeniser;
+use crate::stringtokeniser::{StrToken, StrTokeniser};
 
 use super::*;
 use lexer::{Keyword, Lexer, Token};
 
 #[test]
 fn lexer_input_test_a() {
-    let lexer = Lexer::new_str("add 1 2 x");
+    let arr = [
+        StrToken::Generic("add".to_string()),
+        StrToken::Generic("1".to_string()),
+        StrToken::Generic("2".to_string()),
+        StrToken::Generic("x".to_string())
+    ];
+    let lexer = Lexer::new_tokenarr(arr.as_slice());
 
     assert!(lexer.eq([
         Token::Keyword(Keyword::Add),
@@ -19,19 +25,29 @@ fn lexer_input_test_a() {
 
 #[test]
 fn lexer_input_test_b() {
-    let lexer = Lexer::new_str("add 1 2 x \n sub 1.0 3.14 x \n foo");
+    let tokens = StrTokeniser::new(&("add 1 2 x\nsub 1 3.14 x\nfoo".to_string())).collect();
+    let lexer = Lexer::new(tokens.iter());
 
     println!("{:?}", lexer.clone().collect::<Vec<_>>());
     assert!(lexer.eq([
         Token::Keyword(Keyword::Add),
+        Token::Space,
         Token::FloatLiteral(1.0),
+        Token::Space,
         Token::FloatLiteral(2.0),
+        Token::Space,
         Token::Unidentified("x".to_string()),
+        Token::EOL,
         Token::Keyword(Keyword::Sub),
+        Token::Space,
         Token::FloatLiteral(1.0),
+        Token::Space,
         Token::FloatLiteral(3.14),
+        Token::Space,
         Token::Unidentified("x".to_string()),
-        Token::Unidentified("foo".to_string())
+        Token::EOL,
+        Token::Unidentified("foo".to_string()),
+        Token::EOF
     ]));
 }
 
