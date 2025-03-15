@@ -44,7 +44,7 @@ impl<'a> StrTokeniser<'a> {
             }
             x => {
                 let size = size.1.unwrap_or(0);
-                if i > size - 4 {
+                if i > size {
                     out.push(StrToken::Generic(tmpstr.clone()));
                 }
                 tmpstr.push(x);
@@ -53,9 +53,6 @@ impl<'a> StrTokeniser<'a> {
 
         out.push(StrToken::Generic(tmpstr.clone()));
         out.push(StrToken::EOF);
-
-        // Remove empty tokens. There's probably a way to avoid them, but idk what it is
-        out.retain(|x| *x != StrToken::Generic("".to_string()));
 
         out
     }
