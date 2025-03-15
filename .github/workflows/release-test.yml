@@ -1,8 +1,10 @@
-name: test-dev
+name: release-test
 
 on:
   release:
-    types: [published]
+    types: [ published ]
+  push:
+    branches: [ "master" ]
 
 jobs:
     code-quality:
