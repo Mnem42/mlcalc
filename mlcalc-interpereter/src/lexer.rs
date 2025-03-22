@@ -100,7 +100,7 @@ impl Iterator for Lexer<'_> {
             },
             StrToken::EOL => {
                 if !self.comment_str.is_empty(){
-                    let tmp = Some(Token::Comment(self.comment_str.clone()));
+                    let tmp = Some(Token::Comment(self.comment_str.clone().trim().to_string()));
                     self.comment_str.clear();
                     self.in_comment=false;
 
@@ -118,6 +118,6 @@ impl Iterator for Lexer<'_> {
 /// Removes `Token::Empty` and `Token::Space`
 pub fn clean_tokenarr(x: &[Token]) -> Vec<Token> {
     x.iter().clone()
-     .filter(|x| **x!=Token::EOF && **x!=Token::EOL)
+     .filter(|x| **x!=Token::Empty && **x!=Token::Space)
      .map(|x|x.clone()).collect()
 }

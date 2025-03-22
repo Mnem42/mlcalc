@@ -53,8 +53,8 @@ fn lexer_input_test_comment(){
         Token::FloatLiteral(1.0),
         Token::FloatLiteral(2.0),
         Token::Unidentified("x".to_string()),
-        Token::Comment(" A comment ".to_string()),
-        Token::Comment(" This one spans the entire line ".to_string()),
+        Token::Comment("A comment".to_string()),
+        Token::Comment("This one spans the entire line".to_string()),
         Token::Keyword(Keyword::Sub),
         Token::EOF
     ]);
