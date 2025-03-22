@@ -10,7 +10,7 @@ pub enum StrToken {
 }
 
 pub fn split_eol(x:&[StrToken]) -> Vec<Vec<StrToken>>{
-    x.clone().split(|x| *x==StrToken::EOL).map(|x|x.to_owned()).collect()
+    x.split(|x| *x==StrToken::EOL).map(|x|x.to_owned()).collect()
 }
 
 #[derive(Clone)]
@@ -20,7 +20,7 @@ pub struct StrTokeniser<'a> {
 }
 
 impl<'a> StrTokeniser<'a> {
-    pub fn new(input: &'a String) -> StrTokeniser<'a> {
+    pub fn new(input: &'a str) -> StrTokeniser<'a> {
         let tmp = input.chars();
         StrTokeniser {
             contained: tmp,

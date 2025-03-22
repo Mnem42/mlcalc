@@ -1,8 +1,5 @@
-use std::{io::Split, path::Iter};
-use split_iter::Splittable;
-
-use crate::stringtokeniser::{StrToken};
-type MergedLine = Vec<StrToken>;
+use crate::stringtokeniser::StrToken;
+pub type MergedLine = Vec<StrToken>;
 
 pub enum ResolvedToken {
     Add(f64, f64),

@@ -1,10 +1,4 @@
-use crate::fileio;
-use crate::stringtokeniser;
 use crate::stringtokeniser::StrToken;
-use crate::stringtokeniser::StrTokeniser;
-use std::collections::binary_heap::Iter;
-use std::str::SplitWhitespace;
-use std::slice;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 
@@ -119,5 +113,5 @@ impl Iterator for Lexer<'_> {
 pub fn clean_tokenarr(x: &[Token]) -> Vec<Token> {
     x.iter().clone()
      .filter(|x| **x!=Token::Empty && **x!=Token::Space)
-     .map(|x|x.clone()).collect()
+     .cloned().collect()
 }
