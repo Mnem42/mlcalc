@@ -117,12 +117,7 @@ impl Iterator for Lexer<'_> {
 
 /// Removes `Token::Empty` and `Token::Space`
 pub fn clean_tokenarr(x: &[Token]) -> Vec<Token> {
-    let mut tmp = vec![];
-    x.iter().clone().for_each(|x| match x{
-        Token::Empty => {}
-        Token::Space => {}
-        x => tmp.push(x.clone())
-    });
-
-    tmp
+    x.iter().clone()
+     .filter(|x| **x!=Token::EOF && **x!=Token::EOL)
+     .map(|x|x.clone()).collect()
 }

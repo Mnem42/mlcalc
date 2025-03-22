@@ -9,6 +9,10 @@ pub enum StrToken {
     EOF,
 }
 
+pub fn split_eol(x:&[StrToken]) -> Vec<Vec<StrToken>>{
+    x.clone().split(|x| *x==StrToken::EOL).map(|x|x.to_owned()).collect()
+}
+
 #[derive(Clone)]
 pub struct StrTokeniser<'a> {
     contained: Chars<'a>,

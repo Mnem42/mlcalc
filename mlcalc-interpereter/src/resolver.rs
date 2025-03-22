@@ -1,8 +1,8 @@
-use std::path::Iter;
+use std::{io::Split, path::Iter};
+use split_iter::Splittable;
 
-use crate::lexer::{Lexer, Token};
-
-#[derive(Debug, Clone, PartialEq)]
+use crate::stringtokeniser::{StrToken};
+type MergedLine = Vec<StrToken>;
 
 pub enum ResolvedToken {
     Add(f64, f64),
@@ -12,28 +12,4 @@ pub enum ResolvedToken {
     Var(f64),
 }
 
-struct Resolver {
-    contents: Vec<ResolvedToken>,
-    position: usize,
-}
 
-impl Resolver {
-    pub fn new(input_vec: Vec<ResolvedToken>) -> Resolver {
-        Resolver {
-            contents: input_vec,
-            position: 0,
-        }
-    }
-}
-
-impl Iterator for Resolver {
-    type Item = ResolvedToken;
-
-    fn next(&mut self) -> Option<ResolvedToken> {
-        if self.contents.len() < self.position {
-            Some(self.contents[self.position].clone())
-        } else {
-            None
-        }
-    }
-}

@@ -1,4 +1,4 @@
-use crate::stringtokeniser::{StrToken,StrTokeniser};
+use crate::stringtokeniser::{split_eol, StrToken, StrTokeniser};
 
 #[test]
 fn itertok_test1() {
@@ -19,5 +19,36 @@ fn itertok_test1() {
         StrToken::Generic("1".to_string()),
         StrToken::EOF
 
+    ])
+}
+
+#[test]
+fn spliteol_test() {
+    let tmp = split_eol(&[
+        StrToken::Generic("add".to_string()),
+        StrToken::Generic("1".to_string()),
+        StrToken::Generic("2".to_string()),
+        StrToken::EOL,
+        StrToken::Generic("sub".to_string()),
+        StrToken::Generic("2".to_string()),
+        StrToken::Generic("1".to_string()),
+        StrToken::EOL,
+        StrToken::EOF
+    ]);
+    println!("{:?}",tmp);
+    assert_eq!(tmp,vec![
+        vec![
+            StrToken::Generic("add".to_string()),
+            StrToken::Generic("1".to_string()),
+            StrToken::Generic("2".to_string()),
+        ],
+        vec![
+            StrToken::Generic("sub".to_string()),
+            StrToken::Generic("2".to_string()),
+            StrToken::Generic("1".to_string())
+        ],
+        vec![
+            StrToken::EOF
+        ]
     ])
 }
