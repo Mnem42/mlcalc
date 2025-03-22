@@ -1,11 +1,11 @@
-use crate::stringtokeniser::{split_eol, StrToken, StrTokeniser};
+use crate::stringtokeniser::{split_eol, StrToken, tokenise_str};
 
 #[test]
 fn itertok_test1() {
-    let str = "add 1 2\ndaa 2 1".to_string();
-    let tmp = StrTokeniser::new(&str);
-    println!("{:?}", tmp.clone().collect());
-    assert_eq!(tmp.collect(),vec![
+    let str = "add 1 2\ndaa 2 1";
+    let tmp = tokenise_str(str);
+    println!("{:?}", tmp);
+    assert_eq!(tmp,vec![
         StrToken::Generic("add".to_string()),
         StrToken::Space,
         StrToken::Generic("1".to_string()),
