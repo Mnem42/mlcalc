@@ -1,9 +1,25 @@
+use std::fs::File;
 use std::path::Path;
 use std::str::SplitWhitespace;
 
-pub struct FilePos {
-    row: usize,
-    col: usize,
+#[derive(Debug, Clone, Copy)]
+pub struct FilePos<T> {
+    contained: T,
+    line: usize
+}
+
+impl<T> FilePos<T>{
+    pub fn new(contained: T, line: usize) -> FilePos<T>{
+        FilePos::<T> { contained, line }
+    }
+
+    pub fn get_contents(self) -> T {
+        self.contained
+    }
+
+    pub fn get_line(self) -> usize {
+        self.line
+    }
 }
 
 pub struct InterpereterUnit {
