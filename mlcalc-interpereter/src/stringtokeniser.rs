@@ -1,4 +1,5 @@
 use std::iter;
+use std::path::Iter;
 use std::str::Chars;
 use std::string::String;
 
@@ -9,6 +10,7 @@ pub enum StrToken {
     EOL,
     EOF,
 }
+
 
 pub fn split_eol(x:&[StrToken]) -> Vec<Vec<StrToken>>{
     x.split(|x| *x==StrToken::EOL).map(|x|x.to_owned()).collect()

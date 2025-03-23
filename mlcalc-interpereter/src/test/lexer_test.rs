@@ -1,4 +1,4 @@
-use crate::{lexer::clean_tokenarr, stringtokeniser::{tokenise_str, StrToken}};
+use crate::{stringtokeniser::{tokenise_str, StrToken}};
 
 use crate::lexer::{Keyword, Lexer, Token};
 
@@ -24,7 +24,7 @@ fn lexer_input_test_a() {
 fn lexer_input_test_b() {
     let tokens = tokenise_str("add 1 2 x\nsub 1 3.14 x\nfoo");
     let lexer = Lexer::new(tokens.iter());
-    let tmp = clean_tokenarr(lexer.collect::<Vec<_>>().as_slice());
+    let tmp = lexer.tokenise();
 
     assert_eq!(tmp, vec![
         Token::Keyword(Keyword::Add),
@@ -46,7 +46,7 @@ fn lexer_input_test_b() {
 fn lexer_input_test_comment(){
     let tokens = tokenise_str("add 1 2 x # A comment \n# This one spans the entire line \n sub");
     let lexer = Lexer::new(tokens.iter());
-    let tmp = clean_tokenarr(lexer.collect::<Vec<_>>().as_slice());
+    let tmp = lexer.tokenise();
 
     assert_eq!(tmp,vec![
         Token::Keyword(Keyword::Add),

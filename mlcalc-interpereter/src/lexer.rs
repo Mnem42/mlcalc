@@ -1,3 +1,5 @@
+use std::path::Iter;
+
 use crate::stringtokeniser::StrToken;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -51,9 +53,15 @@ impl <'a>Lexer<'a> {
             comment_str: String::new()
         }
     }
+
+    /// Collects and filters out `Token::Empty` and `Token::Space`
+    pub fn tokenise(self) ->  Vec<Token> {
+        return self.filter(|x| *x!=Token::Empty && *x!=Token::Space)
+                   .collect();
+    }
 }
 
-// Implements iterator so that it behaves like one
+/// Implements iterator so that it behaves like one
 impl Iterator for Lexer<'_> {
     type Item = Token;
 
@@ -107,11 +115,4 @@ impl Iterator for Lexer<'_> {
             StrToken::EOF => Some(Token::EOF)
         }
     }
-}
-
-/// Removes `Token::Empty` and `Token::Space`
-pub fn clean_tokenarr(x: &[Token]) -> Vec<Token> {
-    x.iter().clone()
-     .filter(|x| **x!=Token::Empty && **x!=Token::Space)
-     .cloned().collect()
 }

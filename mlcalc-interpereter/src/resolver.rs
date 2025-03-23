@@ -7,6 +7,9 @@ pub enum ResolvedToken {
     Mul(f64, f64),
     Div(f64, f64),
     Var(f64),
+    EOL
 }
 
-
+pub fn resolve_tokens() -> Vec<ResolvedToken>{
+    return vec![]
+}
